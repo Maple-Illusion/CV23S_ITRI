@@ -6,4 +6,10 @@
 > * M11152024謝維鈞
 > * M11103441廖柏丞
 
-## Pinhole Model
+## task list
+* Data preparation
+* Segmentation
+* 2D Corners
+* Pinhole Model
+* 3D Coordinates
+* SLAM
