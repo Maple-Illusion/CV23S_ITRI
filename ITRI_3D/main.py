@@ -47,7 +47,7 @@ if __name__ == '__main__':
     
 
     ###########check and combine points
-    new = gcor.combine_crop(img,img_corner,origin)
+    new = gcor.combine_crop(img,corner_imgs,origin)
 
     ################################### Pinhole model
 
