@@ -23,20 +23,33 @@ def img_prcess(img):
 
 
 def find_corner(img_ls):
-    
+    imgs_corners = []
     img_num = len(img_ls)
     for i in range(img_num):
         processed = img_prcess(img_ls[i])
         dst = cv2.cornerHarris(processed,2,3,0.04)
+        #print(dst.shape)
         # cv2.imshow('test2',dst)
         # cv2.waitKey(0)
-        dst = cv2.dilate(dst,None)
+        dst = cv2.dilate(dst,None) # corner
         img_ls[i][dst>0.01*dst.max()]=[0,0,255]
-        # reg = gray[i]
+
+        dst = cv2.cornerHarris(processed,2,3,0.04)
+        dst = cv2.dilate(dst,None)
+        ret, dst = cv2.threshold(dst,0.01*dst.max(),255,0)
+        dst = np.uint8(dst)
+        # find centroids
+        ret, labels, stats, centroids = cv2.connectedComponentsWithStats(dst)
+        # define the criteria to stop and refine the corners
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.001)
+        corners = cv2.cornerSubPix(processed,np.float32(centroids),(5,5),(-1,-1),criteria)
+        imgs_corners.append(corners)
+        #print(corners)
+                # reg = gray[i]
         # print(reg.shape)
         # cv2.imshow('test',img_ls[i])
         # cv2.waitKey(0)
-    return img_ls
+    return img_ls, imgs_corners
 
 def combine_crop(img,corner_img,coord_aug):  ########for visualize only
     img_num = len(corner_img)
