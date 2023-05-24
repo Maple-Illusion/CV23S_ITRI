@@ -21,7 +21,7 @@
 
 #### Note book (feel free, jsut modify your own part)
 ##### M11130413蘇子揚
-> * [RPY and Quaterniion].https://hackmd.io/@shengwen/rotation-matrix.
+> * [RPY and Quaterniion](https://hackmd.io/@shengwen/rotation-matrix)
 ##### M11152024謝維鈞
 
 
