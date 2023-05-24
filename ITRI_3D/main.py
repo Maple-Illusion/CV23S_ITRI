@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
 
     ################################### Get corners
-    img_corner = gcor.find_corner(crop_img)
+    corner_imgs, imgs_corners= gcor.find_corner(crop_img)  # imgs_corners 為四張圖f,fr,fl,b 的corner
     
 
     ###########check and combine points
