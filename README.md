@@ -15,3 +15,23 @@
 * SLAM
 * Distorsion
 * Mask remove points
+
+###### Update log
+
+
+#### Note book (feel free, jsut modify your own part)
+##### M11130413蘇子揚
+
+##### M11152024謝維鈞
+
+
+
+##### R10943147李彥緯
+
+
+
+##### M11103441廖柏丞
+
+
+
+#### Note end
