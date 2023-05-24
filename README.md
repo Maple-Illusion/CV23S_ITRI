@@ -13,3 +13,5 @@
 * Pinhole Model
 * 3D Coordinates
 * SLAM
+* Distorsion
+* Mask remove points
