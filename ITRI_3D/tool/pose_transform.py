@@ -18,6 +18,10 @@ def rad2deg(radian):
     degree = radian * (180/math.pi)
     return degree
 
+def deg2rad(degree):
+    radian = degree * (math.pi/180)
+    return radian
+
 def rotation_mx(ls):
     r = ls[0]
     p = ls[1]
@@ -27,7 +31,7 @@ def rotation_mx(ls):
           -np.sin(p), np.cos(p)*np.sin(r), np.cos(p)*np.cos(r)]
     return np.array(Rm).reshape(3,3)
 def coord_aug(ls,dim = 2):
-    dis = np.ones((1,dim),np.float64)
+    dis = np.ones((1,dim+1),np.float64)
     dis[0][0:dim] = np.array(ls)
     # print(dis)
     # dis = np.hstack(,1,axis=0)
@@ -38,8 +42,11 @@ def coord_aug(ls,dim = 2):
     
 
 def tranformation_mx(rotate_mx,trans_mx):
-    # reg = np.zeros((1,3),np.float64)
-    # reg[0][2] = 1.
-    # rt_m_aug = np.vstack(rotate_mx,reg)
-    TFM = np.hstack([rotate_mx,trans_mx])
+    reg = np.zeros((1,3),np.float64)
+    # reg[0][2] = 1
+    # print(reg,rotate_mx)
+    rt_m_aug = np.vstack([rotate_mx,reg])
+    # print(rt_m_aug)
+    TFM = np.hstack([rt_m_aug,trans_mx])
+    
     return TFM
