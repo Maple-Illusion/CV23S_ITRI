@@ -3,7 +3,7 @@ import pandas as pd
 import cv2
 
 
-def Crop(img,target):
+def Crop(img,target,threshold):
     box  = np.zeros((len(target.index),4),np.int64)
     crop = []
     cls_id = []
@@ -11,10 +11,22 @@ def Crop(img,target):
     origins = []
     # print(box.shape)
     for i in target.index:
+        sc = target.loc[i,5]
+        if sc < threshold:
+            continue
+        h = target.loc[i,2] - target.loc[i,0] 
+        w = target.loc[i,3] - target.loc[i,1] 
+        if (w < 20):
+            continue
+        if (h < 20):
+            continue
+
         box[i,:] = target.loc[i,:3].astype(np.int64)
         crop.append(img[box[i,1]:box[i,3],box[i,0]:box[i,2]])
         cls_id.append(target.loc[i,4])
+
         score.append(target.loc[i,5])
+
         origins.append([box[i,0],box[i,1]])
         # reg = crop[i]
         # print(reg.shape)
