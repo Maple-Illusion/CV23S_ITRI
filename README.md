@@ -22,6 +22,7 @@
 #### Note book (feel free, jsut modify your own part)
 ##### M11130413蘇子揚
 > * [RPY and Quaternion](https://hackmd.io/@shengwen/rotation-matrix)
+> * [CSE/EE486 Computer Vision I](https://www.cse.psu.edu/~rtc12/CSE486/)
 ##### M11152024謝維鈞
 
 
