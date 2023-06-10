@@ -20,6 +20,6 @@ def benchmark(dataset_path, sequences):
 
 
 if __name__ == '__main__':
-    dataset_path = r'D:\CV\ITRI_DLC\ITRI_DLC'
+    dataset_path = r'../../../ITRI_DLC'
     sequences = ['seq3']
     benchmark(dataset_path, sequences)

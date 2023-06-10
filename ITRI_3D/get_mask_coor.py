@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 
-imgb = cv2.imread('D:\CV\ITRI_dataset\ITRI_dataset\camera_info\lucid_cameras_x00\gige_100_b_hdr_mask.png', cv2.IMREAD_GRAYSCALE)
+imgb = cv2.imread('../../ITRI_dataset/camera_info/lucid_cameras_x00/gige_100_b_hdr_mask.png', cv2.IMREAD_GRAYSCALE)
 
 kernel = np.ones((5,5), np.uint8) 
 
@@ -27,7 +27,7 @@ for i in range(h):
 file.close()
 
 
-imgf = cv2.imread('D:\CV\ITRI_dataset\ITRI_dataset\camera_info\lucid_cameras_x00\gige_100_f_hdr_mask.png', cv2.IMREAD_GRAYSCALE)
+imgf = cv2.imread('../../ITRI_dataset/camera_info/lucid_cameras_x00/gige_100_f_hdr_mask.png', cv2.IMREAD_GRAYSCALE)
 h,w = imgf.shape
 imgf = cv2.dilate(imgf, kernel, iterations = 1)
 
@@ -45,7 +45,7 @@ for i in range(h):
             #print (i,j)
 file.close()
 
-imgfl = cv2.imread('D:\CV\ITRI_dataset\ITRI_dataset\camera_info\lucid_cameras_x00\gige_100_fl_hdr_mask.png', cv2.IMREAD_GRAYSCALE)
+imgfl = cv2.imread('../../ITRI_dataset/camera_info/lucid_cameras_x00/gige_100_fl_hdr_mask.png', cv2.IMREAD_GRAYSCALE)
 h,w = imgfl.shape
 imgfl = cv2.dilate(imgfl, kernel, iterations = 1)
 
@@ -63,7 +63,7 @@ for i in range(h):
             #print (i,j)
 file.close()
 
-imgfr = cv2.imread('D:\CV\ITRI_dataset\ITRI_dataset\camera_info\lucid_cameras_x00\gige_100_fr_hdr_mask.png', cv2.IMREAD_GRAYSCALE)
+imgfr = cv2.imread('../../ITRI_dataset/camera_info/lucid_cameras_x00/gige_100_fr_hdr_mask.png', cv2.IMREAD_GRAYSCALE)
 h,w = imgfr.shape
 
 imgfr = cv2.dilate(imgfr, kernel, iterations = 1)

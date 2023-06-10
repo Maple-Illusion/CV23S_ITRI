@@ -13,13 +13,14 @@ from tqdm import tqdm
 
 if __name__ == '__main__':
     paser = argparse.ArgumentParser(prog='main',description='Data preparation')
-    paser.add_argument('--camera_info',type=str,default=r'D:\CV\ITRI_dataset\ITRI_dataset\camera_info\lucid_cameras_x00')
-    paser.add_argument('--cam_launch',type=str,default=r'D:\CV\ITRI_dataset\ITRI_dataset\camera_info\lucid_cameras_x00\camera_extrinsic_static_tf.launch')
-    paser.add_argument('--data_folder',type=str,default=r'D:\CV\ITRI_DLC\ITRI_DLC\test2\dataset')
+    paser.add_argument('--camera_info',type=str,default=r'../../ITRI_dataset/camera_info/lucid_cameras_x00')
+    paser.add_argument('--cam_launch',type=str,default=r'../../ITRI_dataset/camera_info/lucid_cameras_x00/camera_extrinsic_static_tf.launch')
+    paser.add_argument('--data_folder',type=str,default=r'../../ITRI_DLC/test2/dataset')
+    #paser.add_argument('--data_folder',type=str,default=r'D:\CV\ITRI_DLC\ITRI_DLC\test2\dataset')
     # paser.add_argument('--data_folder',type=str,default=r'D:\CV\ITRI_dataset\ITRI_dataset\seq2\dataset\1681116127_676490974')
     paser.add_argument('--cam_num',type=int,default=1)
-    paser.add_argument('--mask_folder',type=str,default=r'D:\CV\CV23S_ITRI-main_2\CV23S_ITRI-main\ITRI_3D')
-    paser.add_argument('--output',type=str,default=r'D:\CV\ITRI_DLC\ITRI_DLC\test2\dataset')
+    paser.add_argument('--mask_folder',type=str,default=r'./')
+    paser.add_argument('--output',type=str,default=r'../../ITRI_DLC/test2/dataset')
     # paser.add_argument('--target',type=str,default=r'')
     args = paser.parse_args()
     dir_list = os.listdir(args.data_folder)
@@ -41,10 +42,13 @@ if __name__ == '__main__':
         camara_type = camara_type + '_camera_info.yaml'
         cam_root = os.path.join(args.camera_info,camara_type)
 
-        #print(img_root)
+        #print(img_folder)
         #marker = pd.read_csv(r'D:\CV\ITRI_dataset\ITRI_dataset\seq2\dataset\1681116129_479546307\detect_road_marker.csv',header=None,encoding='utf-8')
 
-        marker = pd.read_csv(os.path.join(args.data_folder,img_folder,'detect_road_marker.csv'),header=None,encoding='utf-8')
+        try:
+            marker = pd.read_csv(os.path.join(args.data_folder,img_folder,'detect_road_marker.csv'),header=None,encoding='utf-8')
+        except pd.errors.EmptyDataError:
+            print("No data") 
         marker = marker.astype('float')
         marker = marker.clip(lower=0)
 
@@ -54,14 +58,28 @@ if __name__ == '__main__':
         img = cv2.imread(img_root)
         # print(img.shape)
         
-        threshold = 0.3
+        threshold = 0.1
         ################################### Segmentation
         crop_img, obj_id, prob, origin = seg.Crop(img,marker,threshold)
         cma_params = cam.read_camera_info(cam_root)
 
         ################################### Get corners
-        corner_imgs, imgs_corners= gcor.find_corner(crop_img,origin)  # imgs_corners 為四張圖f,fr,fl,b 的corner
-
+        #for i in range(len(crop_img)):
+        #    cv2.imshow('d',crop_img[i])
+        #    cv2.waitKey(0)
+        #    cv2.destroyAllWindows()
+        #print(f"len({len(crop_img)})")
+        corner_imgs, imgs_corners= gcor.find_corner1(crop_img,origin)  # imgs_corners 為四張圖f,fr,fl,b 的corner
+        #if img_folder == '1681114213_655102787':
+        #    print(imgs_corners)
+        #    for i in corner_imgs:
+        #        gcor.cvshow(i)
+        new = gcor.combine_crop(img,corner_imgs,origin)
+        cv2.imwrite(os.path.join(args.data_folder,img_folder,'out.jpg'),new)
+        #if corner_imgs != []:
+        #    cv2.imshow('test',corner_imgs[-1])
+        #    cv2.waitKey(0)
+        #    cv2.destroyAllWindows()
         # print(imgs_corners[0])
         #imgs_corners[4]= imgs_corners[4].astype(int)
 
@@ -76,14 +94,18 @@ if __name__ == '__main__':
         new_corners = []
 
         
-
+        outpath = os.path.join(args.output,img_folder,'output.csv')
+        with open(outpath, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            # 寫入一列資料
+            #writer.writerow([ans[0][0], ans[1][0], ans[2][0]]) 
         for i in range(len(imgs_corners)):
             if camara_type == 'gige_100_fr_hdr_camera_info.yaml':
                 # print(fr_mask.shape)
                 new_corner = gcor.mask_diff(imgs_corners[i],fr_mask)
                 new_corners.append(new_corner)
                 
-                outpath = os.path.join(args.output,img_folder,'output.csv')
+                
                 with open(outpath, 'w', newline='') as csvfile:
 
                     for point in new_corner:
@@ -143,10 +165,12 @@ if __name__ == '__main__':
                 new_corner = gcor.mask_diff(imgs_corners[i],b_mask)
                 new_corners.append(new_corner)
                 outpath = os.path.join(args.output,img_folder,'output.csv')
+                if img_folder == '1681114213_655102787':
+                    print(new_corner)
                 with open(outpath, 'w', newline='') as csvfile:
 
                     for point in new_corner:
-
+                        
                         int_root = os.path.join(args.camera_info,camara_type)
                         int_matrix_ls = PH.intrinsic_metrix(int_root)
                         cam_sym = 'fb'

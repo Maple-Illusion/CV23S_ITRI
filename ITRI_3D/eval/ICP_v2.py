@@ -8,11 +8,12 @@ def ICP(source, target, threshold, init_pose, iteration=30):
     # implement iterative closet point and return transformation matrix
     reg_p2p = o3d.pipelines.registration.registration_icp(
         source, target, threshold, init_pose,
-        o3d.pipelines.registration.TransformationEstimationPointToPoint(),
-        o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=iteration)
+        estimation_method = o3d.pipelines.registration.TransformationEstimationPointToPoint(),
+        criteria = o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=iteration)
     )
-    #print(reg_p2p)
-    #print(reg_p2p.transformation)
+    print(reg_p2p)
+    assert len(reg_p2p.correspondence_set) != 0, 'The size of correspondence_set between your point cloud and sub_map should not be zero.'
+    print(reg_p2p.transformation)
     return reg_p2p.transformation
 
 def csv_reader(filename):
@@ -30,7 +31,8 @@ def numpy2pcd(arr):
 if __name__ == '__main__':
 
     path = r'../../../ITRI_DLC/test2/dataset'
-    f = open(r'../../../ITRI_DLC/test2/localization_timestamp.txt')
+    init_pose_path = r'../../../ITRI_DLC2/test2/new_init_pose'
+    f = open(r'../../../ITRI_DLC2/test2/localization_timestamp.txt')
 
     with open(r"../../../ITRI_DLC/test2/pridict.txt", 'w', newline='') as csvfile:
 
@@ -39,7 +41,7 @@ if __name__ == '__main__':
             sub_map = path + '/'+ line +'/sub_map.csv'
             #print(sub_map)
             output = path + '/'+  line +'/output.csv'
-            initial_pose = path + '/'+  line +'/initial_pose.csv'
+            initial_pose = init_pose_path + '/'+  line +'/initial_pose.csv'
 
             #path_name = './seq1/dataset/1681710717_541398178'
 
@@ -63,7 +65,8 @@ if __name__ == '__main__':
             init_pose = csv_reader(initial_pose)
 
             # Implement ICP
-            transformation = ICP(source_pcd, target_pcd, threshold=0.02, init_pose=init_pose)
+            print(line)
+            transformation = ICP(source_pcd, target_pcd, threshold=5000, init_pose=init_pose)
             pred_x = transformation[0,3]
             pred_y = transformation[1,3]
             #print(pred_x, pred_y)

@@ -5,6 +5,7 @@ import cv2
 
 def Crop(img,target,threshold):
     box  = np.zeros((len(target.index),4),np.int64)
+    
     crop = []
     cls_id = []
     score = []
@@ -32,6 +33,7 @@ def Crop(img,target,threshold):
         # print(reg.shape)
         # cv2.imshow(str(cls_id[i])+' '+str(score[i]),reg)
         # cv2.waitKey(0)
+    #print(len(crop))
     return crop, cls_id, score, origins
 
 def threshold(score):
